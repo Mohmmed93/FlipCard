@@ -1,11 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createStore, compose, applyMiddleware} from 'redux';
 import {persistStore, persistCombineReducers} from 'redux-persist';
-// import AsyncStorage from '@react-native-community/async-storage';
 import createSagaMiddleware from 'redux-saga';
-import sagas from './sagas';
 
-import rootReducers from '../store/reducers';
+import rootReducers from './reducers';
+import rootSaga from './sagas';
 
 const config = {
   key: 'root',
@@ -19,17 +18,15 @@ middleware.push(sagaMiddleware);
 
 const reducers = persistCombineReducers(config, rootReducers);
 const enhancers = [applyMiddleware(...middleware)];
-// const initialState = {};
+
 const persistConfig: any = {enhancers};
 const store = createStore(reducers, undefined, compose(...enhancers));
-const persistor = persistStore(store, persistConfig, () => {
-  console.log('Test', store.getState());
-});
+const persistor = persistStore(store, persistConfig);
 const configureStore = () => {
   return {persistor, store};
 };
 
-sagaMiddleware.run(sagas);
+sagaMiddleware.run(rootSaga);
 
 export default configureStore;
 

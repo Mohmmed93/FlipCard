@@ -62,23 +62,14 @@ const CardItem: React.FC<{
   */
 
   return (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: 'column',
-        margin: 1,
-      }}>
+    <View style={styles.base}>
       <Pressable
         onPress={() => {
           !disabled && onClickCard(card);
           // flipCardAnimation();
         }}>
         <View style={flipped ? [styles.flipBack] : [styles.flipFront]}>
-          {
-            <Text style={{alignSelf: 'center'}}>
-              {flipped ? card.number : '?'}{' '}
-            </Text>
-          }
+          {<Text style={styles.text}>{flipped ? card.number : '?'} </Text>}
         </View>
       </Pressable>
     </View>
@@ -105,6 +96,12 @@ const styles = StyleSheet.create({
     width: '100%',
     // position: 'absolute',
   },
+  base: {
+    flex: 1,
+    flexDirection: 'column',
+    margin: 1,
+  },
+  text: {alignSelf: 'center'},
 });
 
 export default CardItem;

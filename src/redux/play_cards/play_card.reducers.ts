@@ -1,38 +1,48 @@
-import {ChoiceResponseState, PlayCard} from '../actions/play_card';
-
-import createReducer from './createReducer';
-import {PlayCardState} from './play_card';
+import {CARD_PAIRS_VALUE} from '../../utils/consts';
+import {shuffle} from '../../utils/util';
+import createReducer from '../create_reducer';
 import {PlayCardActionTypes} from './play_card.constants';
 
-const CARD_PAIRS_VALUE = [
-  {number: '43', matchStatus: false},
-  {number: '55', matchStatus: false},
-  {number: '66', matchStatus: false},
-  {number: '77', matchStatus: false},
-  {number: '88', matchStatus: false},
-  {number: '99', matchStatus: false},
-];
+interface cardType {
+  id: number;
+  number: string;
+  matchStatus: boolean;
+}
+
+interface PlayCardType {
+  firstChoice: cardType;
+  secondChoice: cardType;
+  shuffledCards?: cardType[];
+  gameOver: boolean;
+}
+
+interface ChoiceResponseState {
+  type: string;
+  response: PlayCardType;
+}
+
+export interface PlayCardState {
+  count: number;
+  shuffledCards?: {
+    id: number;
+    number: string;
+    matchStatus: boolean;
+  }[];
+  firstChoice?: cardType;
+  secondChoice?: cardType;
+}
 
 const initialState: PlayCardState = {
-  steps: 0,
   count: 0,
 };
 
-function delay(milliseconds: number) {
-  return new Promise(resolve => {
-    setTimeout(resolve, milliseconds);
-  });
-}
-
 export const playCard = createReducer(initialState, {
   [PlayCardActionTypes.INITIALIZE](state: PlayCardState) {
-    const shuffledCards = [...CARD_PAIRS_VALUE, ...CARD_PAIRS_VALUE]
-      .sort(() => Math.random() - 0.5)
-      .map(card => ({...card, id: Math.random()}));
+    const shuffledCards = shuffle(CARD_PAIRS_VALUE);
     return {
       ...state,
-      step: 0,
       count: 0,
+      gameOver: false,
       shuffledCards: shuffledCards,
       firstChoice: undefined,
       secondChoice: undefined,
@@ -46,8 +56,8 @@ export const playCard = createReducer(initialState, {
       count: step,
     };
   },
-  [PlayCardActionTypes.FLIP](state: PlayCardState, actions: PlayCard) {
-    let disabled;
+  [PlayCardActionTypes.FLIP](state: PlayCardState, actions: PlayCardType) {
+    let disabled: boolean;
     if (actions.firstChoice && actions.secondChoice) {
       disabled = true;
     } else {
@@ -74,9 +84,10 @@ export const playCard = createReducer(initialState, {
       firstChoice: actions.response.firstChoice,
       secondChoice: actions.response.secondChoice,
       disabled: false,
+      gameOver: actions.response.gameOver,
     };
   },
-  [PlayCardActionTypes.RESET](state: PlayCardState) {
+  [PlayCardActionTypes.RESET]() {
     return {
       state: undefined,
     };

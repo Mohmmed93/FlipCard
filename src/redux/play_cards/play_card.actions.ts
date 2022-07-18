@@ -1,15 +1,16 @@
-import {PlayCardActionTypes} from '../reducers/play_card.constants';
+import {PlayCardActionTypes} from './play_card.constants';
 
-interface cardPair {
+interface cardType {
   id: number;
   number: string;
   matchStatus: boolean;
 }
 
 interface choiceResponse {
-  firstChoice: undefined;
-  secondChoice: undefined;
-  shuffledCards?: any;
+  firstChoice: cardType | undefined;
+  secondChoice: cardType | undefined;
+  shuffledCards?: cardType[];
+  gameOver?: boolean;
 }
 
 export function initCard() {
@@ -26,8 +27,8 @@ export function stepCount(count: number) {
 }
 
 export function choices(
-  firstChoice: cardPair,
-  secondChoice: cardPair,
+  firstChoice: cardType,
+  secondChoice: cardType,
   shuffledCards: any,
 ) {
   return {

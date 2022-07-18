@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {
+  Alert,
   Button,
   Dimensions,
   FlatList,
   SafeAreaView,
-  StatusBar,
   StyleSheet,
   Text,
   View,
@@ -12,7 +12,11 @@ import {
 
 import CardItem from '../components/CardItem';
 import useRedux from '../hooks/useRedux';
-import {choices, initCard, stepCount} from '../store/actions/play_card.actions';
+import {
+  choices,
+  initCard,
+  stepCount,
+} from '../redux/play_cards/play_card.actions';
 
 type cardTypes = {id: number; number: string; matchStatus: boolean}[];
 type cardType = {id: number; number: string; matchStatus: boolean};
@@ -26,20 +30,33 @@ const MainScreen = () => {
     dispatch(initCard());
   }, [dispatch]);
 
-  const {steps, shuffledCards, count, firstChoice, secondChoice, disabled} =
+  const {shuffledCards, count, firstChoice, secondChoice, disabled, gameOver} =
     appSelector((state: any) => ({
-      steps: state.playCard.step,
       shuffledCards: state.playCard.shuffledCards,
       count: state.playCard.count,
       firstChoice: state.playCard.firstChoice,
       secondChoice: state.playCard.secondChoice,
       disabled: state.playCard.disabled,
+      gameOver: state.playCard.gameOver,
     }));
 
   useEffect(() => {
     setCards(shuffledCards);
-    setUserSteps(steps);
+    setUserSteps(count);
   }, [shuffledCards]);
+
+  useEffect(() => {
+    if (gameOver) {
+      Alert.alert('Congratulations!', `You win this game by ${count}!`, [
+        {
+          text: 'Try another round',
+          onPress: () => {
+            dispatch(initCard());
+          },
+        },
+      ]);
+    }
+  }, [gameOver]);
 
   useEffect(() => {
     setUserSteps(count);
@@ -52,28 +69,13 @@ const MainScreen = () => {
     firstChoice
       ? dispatch(choices(firstChoice, item, shuffledCards))
       : dispatch(choices(secondChoice, item, shuffledCards));
-    dispatch(stepCount(steps));
+    dispatch(stepCount(count));
   };
 
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: '#404040',
-        height: Dimensions.get('screen').height,
-      }}>
-      <StatusBar
-        backgroundColor="rgba(0,0,0,0)"
-        barStyle={'dark-content'}
-        translucent={true}
-      />
+    <SafeAreaView style={styles.safeStyle}>
       <View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            margin: 10,
-          }}>
+        <View style={styles.topContainer}>
           <Button
             title="Restart"
             onPress={() => {
@@ -83,7 +85,6 @@ const MainScreen = () => {
           <Text>STEPS: {userSteps}</Text>
         </View>
         <FlatList
-          style={{backgroundColor: 'transparent'}}
           data={cards}
           renderItem={({item}) => {
             return (
@@ -107,21 +108,15 @@ const MainScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  safeStyle: {
+    backgroundColor: '#404040',
+    height: Dimensions.get('screen').height,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  topContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    margin: 10,
   },
 });
 
