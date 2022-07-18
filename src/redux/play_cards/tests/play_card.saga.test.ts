@@ -1,8 +1,8 @@
 import {runSaga} from 'redux-saga';
-import {CARD_PAIRS_VALUE} from '../../utils/consts';
-import {shuffle} from '../../utils/util';
-import {PlayCardActionTypes} from '../play_cards/play_card.constants';
-import {playCardSaga} from '../play_cards/play_card.saga';
+import {CARD_PAIRS_VALUE} from '../../../utils/consts';
+import {shuffle} from '../../../utils/util';
+import {PlayCardActionTypes} from '../play_card.constants';
+import {playCardSaga} from '../play_card.saga';
 
 describe('play card saga', () => {
   const dispatched: any = [];

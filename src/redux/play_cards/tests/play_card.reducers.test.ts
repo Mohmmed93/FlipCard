@@ -1,7 +1,7 @@
-import {CARD_PAIRS_VALUE} from '../../utils/consts';
-import {shuffle} from '../../utils/util';
-import {PlayCardActionTypes} from '../play_cards/play_card.constants';
-import {playCard} from '../play_cards/play_card.reducers';
+import {CARD_PAIRS_VALUE} from '../../../utils/consts';
+import {shuffle} from '../../../utils/util';
+import {PlayCardActionTypes} from '../play_card.constants';
+import {playCard} from '../play_card.reducers';
 
 describe('play card reducer', () => {
   let shuffled;

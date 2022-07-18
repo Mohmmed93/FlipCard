@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   stepCount: {color: '#0096FF'},
-  stepText: {color: 'white'}
+  stepText: {color: 'white'},
 });
 
 export default MainScreen;
