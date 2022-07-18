@@ -11,7 +11,7 @@ const config = {
   storage: AsyncStorage,
 };
 
-const middleware = [];
+const middleware: any = [];
 const sagaMiddleware = createSagaMiddleware();
 
 middleware.push(sagaMiddleware);

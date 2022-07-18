@@ -82,7 +82,10 @@ const MainScreen = () => {
               dispatch(initCard());
             }}
           />
-          <Text>STEPS: {userSteps}</Text>
+          <View style={styles.stepsBase}>
+            <Text style={styles.stepText}>STEPS: </Text>
+            <Text style={styles.stepCount}>{userSteps}</Text>
+          </View>
         </View>
         <FlatList
           data={cards}
@@ -118,6 +121,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 10,
   },
+  stepsBase: {
+    flexDirection: 'row',
+  },
+  stepCount: {color: '#0096FF'},
+  stepText: {color: 'white'}
 });
 
 export default MainScreen;
